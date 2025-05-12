@@ -2,7 +2,7 @@
   console.log('Pokemon Showdown Replay Saver loaded');
   
   // Enable debugging
-  const DEBUG = true;
+  const DEBUG = false;
   
   function debugLog(message) {
     if (DEBUG) {
