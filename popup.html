@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Showdown Replays</title>
+  <style>
+    body {
+      width: 450px;
+      max-height: 550px;
+      overflow-y: auto;
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    h1 {
+      margin: 0;
+      color: #333;
+      font-size: 20px;
+    }
+    .replay-item {
+      border-bottom: 1px solid #eee;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: box-shadow 0.2s ease;
+    }
+    .replay-item:hover {
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .replay-meta {
+      flex: 1;
+    }
+    .replay-format {
+      font-weight: bold;
+      color: #222;
+    }
+    .replay-time {
+      font-size: 0.8em;
+      color: #666;
+      margin-top: 5px;
+    }
+    .replay-players {
+      margin-top: 3px;
+      font-size: 0.9em;
+    }
+    /* Winner/Loser styling */
+    .replay-players .winner {
+      color: #28a745 !important;
+      font-weight: bold;
+    }
+    .replay-players .loser {
+      color: #dc3545 !important;
+    }
+    .replay-players .result-indicator {
+      font-size: 0.7em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+      font-weight: bold;
+    }
+    /* Style W differently for winner */
+    .replay-players .winner .result-indicator {
+      background-color: #28a745;
+      color: white;
+    }
+    /* Style L differently for loser */
+    .replay-players .loser .result-indicator {
+      background-color: #dc3545;
+      color: white;
+    }
+    .replay-actions {
+      display: flex;
+      gap: 5px;
+    }
+    button {
+      cursor: pointer;
+      background-color: #4a6baf;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #3a5a9f;
+    }
+    .delete-replay {
+      background-color: #d44;
+    }
+    .delete-replay:hover {
+      background-color: #c33;
+    }
+    #clearAll {
+      background-color: #d44;
+    }
+    #clearAll:hover {
+      background-color: #c33;
+    }
+    .empty-state {
+      text-align: center;
+      color: #666;
+      padding: 30px 20px;
+      background-color: white;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .empty-state p:first-child {
+      font-size: 16px;
+      font-weight: bold;
+      color: #444;
+    }
+    .status-message {
+      padding: 8px 12px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+    .status-message.success {
+      background-color: #dff0d8;
+      color: #3c763d;
+      border: 1px solid #d6e9c6;
+    }
+    .status-message.error {
+      background-color: #f2dede;
+      color: #a94442;
+      border: 1px solid #ebccd1;
+    }
+    .settings-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255,255,255,0.95);
+      z-index: 100;
+      padding: 20px;
+      display: none;
+    }
+    .setting-item {
+      margin-bottom: 15px;
+    }
+    .setting-item label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .setting-item input[type="number"] {
+      width: 80px;
+      padding: 5px;
+    }
+    .setting-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .actions-row {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Showdown Replays</h1>
+    <button id="clearAll">Clear All</button>
+  </div>
+  <div id="replayList"></div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
