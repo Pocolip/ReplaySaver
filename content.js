@@ -112,7 +112,7 @@
     // Wait a bit before saving to ensure battle is fully ended
     setTimeout(() => {
       saveReplay(battleId);
-    }, 1000);
+    }, 100);
   }
   
   // Send the /savereplay command
