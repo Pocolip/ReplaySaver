@@ -15,5 +15,11 @@
       "js": ["content.js"],
       "run_at": "document_end"
     }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject-script.js"],
+      "matches": ["*://play.pokemonshowdown.com/*"]
+    }
   ]
 }
