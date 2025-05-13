@@ -3,7 +3,7 @@
   "name": "Pokemon Showdown Replay Saver",
   "version": "1.0",
   "description": "Automatically saves Pokemon Showdown replay links",
-  "permissions": ["storage", "tabs", "clipboardWrite"],
+  "permissions": ["storage", "clipboardWrite"],
   "host_permissions": ["*://play.pokemonshowdown.com/*"],
   "action": {
     "default_popup": "popup.html",
