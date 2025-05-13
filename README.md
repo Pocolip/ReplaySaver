@@ -62,7 +62,6 @@ A simple Chrome extension that automatically saves replay links from your Pokemo
 
 The extension requires the following permissions:
 - `storage` - To save replay data locally
-- `tabs` - To open replay links in new tabs
 - `clipboardWrite` - To copy replay links to clipboard
 - `host_permissions` - Access to play.pokemonshowdown.com for battle monitoring
 
