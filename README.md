@@ -25,7 +25,8 @@ A simple Chrome extension that automatically saves replay links from your Pokemo
 6. The extension should now appear in your Chrome toolbar
 
 ### Method 2: Install from Chrome Web Store
-*This extension is not currently available on the Chrome Web Store*
+
+Find the extension at this link: [ReplaySaver](https://chromewebstore.google.com/detail/pokemon-showdown-replay-s/bhbnajjpbnbjdichnlbjmgiokcpemjme)
 
 ## How It Works
 
