@@ -31,7 +31,7 @@ Find the extension at this link: [ReplaySaver](https://chromewebstore.google.com
 ## How It Works
 
 1. **Automatic Detection**: The extension monitors your Pokemon Showdown battles
-2. **Battle End Recognition**: When a battle ends (win, loss, forfeit, tie), it's automatically detected (relies on the chat so keep your battle open!)
+2. **Battle End Recognition**: When a battle ends (win, loss, forfeit, tie), it's automatically detected
 3. **Replay Generation**: The extension sends the `/savereplay` command to Pokemon Showdown
 4. **Link Extraction**: It constructs the replay URL and saves it locally
 5. **Storage**: All replay data is stored in your browser's local storage
@@ -39,7 +39,7 @@ Find the extension at this link: [ReplaySaver](https://chromewebstore.google.com
 ## Usage
 
 1. Play battles on [Pokemon Showdown](https://play.pokemonshowdown.com/)
-2. When battles end, replays are automatically saved
+2. When battles start, replays links are automatically saved
 3. Click the extension icon to view your saved replays
 4. Use the popup to:
    - View all saved replays with format and player information
