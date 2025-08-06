@@ -141,16 +141,10 @@ document.addEventListener('DOMContentLoaded', function() {
           // Fetch winner in the background
           fetchReplayWinner(replay, replay.url);
         }
-        
-        // Add status indicator for early saves
-        let statusIndicator = '';
-        if (replay.isEarlySave) {
-          statusIndicator = '<small style="color: #28a745; font-weight: bold;"> [Active Battle]</small>';
-        }
-        
+                
         replayItem.innerHTML = `
           <div class="replay-meta">
-            <div class="replay-format">${replay.format || 'Pokemon Showdown Battle'}${statusIndicator}</div>
+            <div class="replay-format">${replay.format || 'Pokemon Showdown Battle'}</div>
             <div class="replay-players">${formatPlayers(replay.players, replay.winner)}</div>
             <div class="replay-time">${formattedDate}</div>
           </div>
