@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Fetch replay winner from log if not already cached
-  async function fetchReplayWinner(replay, index) {
+  async function fetchReplayWinner(replay, replayUrl) {
     if (replay.winner) {
       return replay.winner;
     }
     
     try {
-      const logUrl = replay.url + '.log';
+      const logUrl = replayUrl + '.log';
       console.log(`Fetching replay log for missing winner: ${logUrl}`);
       
       const response = await fetch(logUrl);
@@ -57,15 +57,16 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       if (winner) {
-        console.log(`Found winner: ${winner} for replay at index ${index}`);
+        console.log(`Found winner: ${winner} for replay ${replayUrl}`);
         
         // Update the stored replay with winner information
         chrome.storage.local.get('replays', (data) => {
           const replays = data.replays || [];
-          if (replays[index]) {
-            replays[index].winner = winner;
+          const replayIndex = replays.findIndex(r => r.url === replayUrl);
+          if (replayIndex !== -1) {
+            replays[replayIndex].winner = winner;
             chrome.storage.local.set({ replays }, () => {
-              console.log(`Updated replay ${index} with winner: ${winner}`);
+              console.log(`Updated replay with winner: ${winner}`);
               // Reload replays to show the updated information
               loadReplays();
             });
@@ -116,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         replayList.innerHTML = `
           <div class="empty-state">
             <p>No replays saved yet.</p>
-            <p>Replays will automatically be saved when your battles end.</p>
+            <p>Replays will automatically be saved when your battles start.</p>
           </div>
         `;
         return;
@@ -127,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Display replays
       replayList.innerHTML = '';
-      replays.forEach((replay, index) => {
+      replays.forEach((replay, displayIndex) => {
         const replayDate = new Date(replay.timestamp);
         const formattedDate = replayDate.toLocaleDateString() + ' ' + 
                              replayDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -138,9 +139,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if we need to fetch winner information
         if (!replay.winner && replay.players && replay.players.length > 0) {
           // Fetch winner in the background
-          fetchReplayWinner(replay, index);
+          fetchReplayWinner(replay, replay.url);
         }
-        
+                
         replayItem.innerHTML = `
           <div class="replay-meta">
             <div class="replay-format">${replay.format || 'Pokemon Showdown Battle'}</div>
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="replay-actions">
             <button class="open-replay" data-url="${replay.url}">Open</button>
             <button class="copy-replay" data-url="${replay.url}">Copy Link</button>
-            <button class="delete-replay" data-index="${index}">Delete</button>
+            <button class="delete-replay" data-url="${replay.url}">Delete</button>
           </div>
         `;
         replayList.appendChild(replayItem);
@@ -179,15 +180,26 @@ document.addEventListener('DOMContentLoaded', function() {
       
       document.querySelectorAll('.delete-replay').forEach(button => {
         button.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          console.log('Deleting replay at index:', index);
+          const replayUrl = this.getAttribute('data-url');
+          console.log('Deleting replay with URL:', replayUrl);
+          
           chrome.storage.local.get('replays', (data) => {
             const replays = data.replays || [];
-            replays.splice(index, 1);
-            chrome.storage.local.set({ replays }, () => {
-              loadReplays();
-              showStatus('Replay deleted successfully!');
-            });
+            
+            // Find the replay by URL instead of using display index
+            const replayIndex = replays.findIndex(replay => replay.url === replayUrl);
+            
+            if (replayIndex !== -1) {
+              console.log(`Found replay at storage index ${replayIndex}, deleting...`);
+              replays.splice(replayIndex, 1);
+              chrome.storage.local.set({ replays }, () => {
+                loadReplays();
+                showStatus('Replay deleted successfully!');
+              });
+            } else {
+              console.error('Replay not found for deletion:', replayUrl);
+              showStatus('Error: Replay not found for deletion', true);
+            }
           });
         });
       });
@@ -241,6 +253,42 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   document.querySelector('.header').appendChild(copyAllButton);
+  
+  // Add export replays button
+  const exportButton = document.createElement('button');
+  exportButton.textContent = 'Export Data';
+  exportButton.style.marginLeft = '10px';
+  exportButton.addEventListener('click', () => {
+    chrome.storage.local.get('replays', (data) => {
+      const replays = data.replays || [];
+      
+      if (replays.length === 0) {
+        showStatus('No replays to export!', true);
+        return;
+      }
+      
+      // Create JSON export
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        replayCount: replays.length,
+        replays: replays
+      };
+      
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      // Create download link
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = `pokemon-showdown-replays-${new Date().toISOString().split('T')[0]}.json`;
+      downloadLink.click();
+      
+      URL.revokeObjectURL(url);
+      showStatus(`Exported ${replays.length} replays to JSON file!`);
+    });
+  });
+  document.querySelector('.header').appendChild(exportButton);
   
   // Initial load
   loadReplays();
